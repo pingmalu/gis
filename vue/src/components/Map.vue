@@ -31,7 +31,8 @@ onMounted(() => {
   let initialLongitude = 120.5853;
   let initialLatitude = 31.2980;
   const position = Cesium.Cartesian3.fromDegrees(initialLongitude, initialLatitude);
-
+  // console.log(position);
+  
   // 创建无人机实体，使用 PNG 图片作为标识
   const droneEntity = viewer.entities.add({
     name: '无人机',
