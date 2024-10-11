@@ -53,7 +53,7 @@ onMounted(() => {
     orientation: {
       heading: Cesium.Math.toRadians(0), // 水平角度
       pitch: Cesium.Math.toRadians(-40),  // 垂直角度
-      roll: 0.0
+      roll: 0.0  // 翻滚角度
     }
   });
 
