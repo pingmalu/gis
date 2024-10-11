@@ -1,16 +1,16 @@
 <template>
   <div id="app">
-  <Map />
+  <Mapmode />
   </div>
 </template>
 
 <script>
-import Map from './components/Map.vue';
+import Mapmode from './components/Mapmode.vue';
 
 export default {
   name: 'App',
   components: {
-    Map,
+    Mapmode,
   },
 };
 </script>
