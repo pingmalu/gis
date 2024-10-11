@@ -3,16 +3,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { onMounted } from 'vue';
 // import { Viewer,Ion } from 'cesium';
 import * as Cesium from 'cesium';
-import { Viewer, Entity, SampledPositionProperty, Clock, JulianDate } from 'cesium';
-
-
 
 onMounted(() => {
   // Ion.defaultAccessToken = ''
-  const viewer = new Viewer('cesiumContainer', {
+  const viewer = new Cesium.Viewer('cesiumContainer', {
     timeline: false, // 关闭时间轴
     animation: false, // 关闭动画效果
     baseLayerPicker: false, // 关闭底图切换按钮
@@ -28,28 +25,40 @@ onMounted(() => {
 
 
   // 初始化无人机位置（以某个坐标为起点，例如苏州）
-  let initialLongitude = 120.5853;
+  let initialLongitude = 120.5855;
   let initialLatitude = 31.2980;
-  const position = Cesium.Cartesian3.fromDegrees(initialLongitude, initialLatitude);
+  const position = Cesium.Cartesian3.fromDegrees(initialLongitude, initialLatitude, 200);
   // console.log(position);
-  
+
   // 创建无人机实体，使用 PNG 图片作为标识
   const droneEntity = viewer.entities.add({
     name: '无人机',
     position: position,
     billboard: {
-      image: './public/vite.svg', // 替换为您的PNG文件路径
-      width: 32, // 图像宽度
-      height: 32 // 图像高度
+      image: './public/aircraft.png', // 替换为您的PNG文件路径
+      width: 130, // 图像宽度
+      height: 130 // 图像高度
     }
   });
 
-  // 设置初始视角，定位到苏州
+  // 保持相机视角跟踪实体
+  var droneposition = droneEntity.position.getValue(Cesium.JulianDate.now());
+  var cartographic = Cesium.Ellipsoid.WGS84.cartesianToCartographic(droneposition);
+
+  // 计算相机的位置，并确保实体在中心(计算视角偏移)
+  var destination = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude - 0.00009, cartographic.height + 500);
+
   viewer.camera.setView({
-    destination: Cesium.Cartesian3.fromDegrees(initialLongitude, initialLatitude, 1000), // 1000为高度，可以根据需要调整
+    destination: destination,
+    orientation: {
+      heading: Cesium.Math.toRadians(0), // 水平角度
+      pitch: Cesium.Math.toRadians(-40),  // 垂直角度
+      roll: 0.0
+    }
   });
 
-
+  // 相机会自动保持追踪该实体，并始终将其放在屏幕中心
+  // viewer.trackedEntity = droneEntity;
 
 })
 
