@@ -8,7 +8,7 @@ import { onMounted } from 'vue';
 import * as Cesium from 'cesium';
 // import SuperGif from '../ex/libgif.js';
 
-onMounted(() => {
+onMounted(async () => {
   // Ion.defaultAccessToken = ''
   const viewer = new Cesium.Viewer('cesiumContainer', {
     timeline: false, // 关闭时间轴
@@ -18,16 +18,28 @@ onMounted(() => {
     baseLayerPicker: false, // 关闭底图切换按钮
     geocoder: false, // 关闭地理编码器
     homeButton: false, // 关闭默认的地图导航按钮
-    infoBox: false, // 关闭默认的信息框
+    // infoBox: false, // 关闭默认的信息框
     sceneModePicker: false, // 关闭场景模式切换按钮
     navigationHelpButton: false, // 关闭帮助按钮
     navigationInstructionsInitiallyVisible: false, // 隐藏默认的导航提示
   });
 
+  // 加载3D Tiles建筑物模型
+  const tileset = await Cesium.Cesium3DTileset.fromIonAssetId(96188);
+  viewer.scene.primitives.add(tileset);
+
+  // 将建筑物颜色改为暗色系
+  tileset.style = new Cesium.Cesium3DTileStyle({
+    color: "color('white', 0.7)" // 将建筑物变成半透明黑色
+  });
+
+  // 开启深度测试，防止建筑物被遮挡
+  viewer.scene.globe.depthTestAgainstTerrain = true;
+
 
   // 初始化无人机位置（以某个坐标为起点，例如苏州）
-  let initialLongitude = 120.5855;
-  let initialLatitude = 31.2980;
+  let initialLongitude = 120.67473;
+  let initialLatitude = 31.31659;
   const position = Cesium.Cartesian3.fromDegrees(initialLongitude, initialLatitude, 200);
   // console.log(position);
 

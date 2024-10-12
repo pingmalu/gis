@@ -7,7 +7,7 @@
 <script>
 import { defineComponent } from 'vue';
 import keymove from './components/keymove.vue';
-// import Buildings from './components/Buildings.vue';
+// import keymove from './components/Buildings.vue';
 
 export default defineComponent({
   name: 'App',
