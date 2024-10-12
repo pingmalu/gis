@@ -13,9 +13,8 @@ onMounted(async () => {
   const viewer = new Cesium.Viewer('cesiumContainer', {
     timeline: false, // 关闭时间轴
     animation: false, // 关闭动画效果
-    baseLayerPicker: false, // 关闭底图切换按钮
+    // baseLayerPicker: false, // 关闭底图切换按钮
     fullscreenButton: false, // 关闭全屏按钮
-    baseLayerPicker: false, // 关闭底图切换按钮
     geocoder: false, // 关闭地理编码器
     homeButton: false, // 关闭默认的地图导航按钮
     // infoBox: false, // 关闭默认的信息框
