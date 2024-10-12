@@ -6,6 +6,7 @@
 import { onMounted } from 'vue';
 // import { Viewer,Ion } from 'cesium';
 import * as Cesium from 'cesium';
+// import SuperGif from '../ex/libgif.js';
 
 onMounted(() => {
   // Ion.defaultAccessToken = ''
@@ -35,11 +36,12 @@ onMounted(() => {
     name: '无人机',
     position: position,
     billboard: {
-      image: './public/aircraft.png', // 替换为您的PNG文件路径
+      image: './aircraft.png', // 替换为您的PNG文件路径
       width: 130, // 图像宽度
       height: 130 // 图像高度
     }
   });
+
 
   // 保持相机视角跟踪实体
   var droneposition = droneEntity.position.getValue(Cesium.JulianDate.now());
@@ -48,13 +50,63 @@ onMounted(() => {
   // 计算相机的位置，并确保实体在中心(计算视角偏移)
   var destination = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude - 0.00009, cartographic.height + 500);
 
-  viewer.camera.setView({
+  viewer.camera.flyTo({
     destination: destination,
     orientation: {
       heading: Cesium.Math.toRadians(0), // 水平角度
       pitch: Cesium.Math.toRadians(-40),  // 垂直角度
       roll: 0.0  // 翻滚角度
     }
+  });
+
+
+  // 添加键盘事件监听器，控制无人机移动
+  window.addEventListener('keydown', (event) => {
+    const moveAmount = 0.00001; // 移动的距离（经纬度变化量）
+    let newPosition = position;
+
+    switch (event.key) {
+      case 'ArrowUp': // 上箭头
+        initialLatitude += moveAmount;
+        newPosition = Cesium.Cartesian3.fromDegrees(initialLongitude, initialLatitude, 200);
+        break;
+      case 'ArrowDown': // 下箭头
+        initialLatitude -= moveAmount;
+        newPosition = Cesium.Cartesian3.fromDegrees(initialLongitude, initialLatitude, 200);
+        break;
+      case 'ArrowLeft': // 左箭头
+        initialLongitude -= moveAmount;
+        newPosition = Cesium.Cartesian3.fromDegrees(initialLongitude, initialLatitude, 200);
+        break;
+      case 'ArrowRight': // 右箭头
+        initialLongitude += moveAmount;
+        newPosition = Cesium.Cartesian3.fromDegrees(initialLongitude, initialLatitude, 200);
+        break;
+    }
+
+    // 更新无人机的位置
+    droneEntity.position = newPosition;
+
+    // 确保相机跟随无人机
+    // viewer.camera.lookAt(newPosition, new Cesium.Cartesian3(0, 0, 1000)); // 相机高度设定为100米，可以根据需要进行调整
+
+
+    // 保持相机视角跟踪实体
+    droneposition = droneEntity.position.getValue(Cesium.JulianDate.now());
+    cartographic = Cesium.Ellipsoid.WGS84.cartesianToCartographic(droneposition);
+
+    // 计算相机的位置，并确保实体在中心(计算视角偏移)
+    destination = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude - 0.00009, cartographic.height + 500);
+
+    viewer.camera.flyTo({
+      destination: destination,
+      orientation: {
+        heading: Cesium.Math.toRadians(0), // 水平角度
+        pitch: Cesium.Math.toRadians(-40),  // 垂直角度
+        roll: 0.0  // 翻滚角度
+      }
+    });
+
   });
 
   // 相机会自动保持追踪该实体，并始终将其放在屏幕中心

@@ -1,16 +1,17 @@
 <template>
   <div class="app">
-    <Mapmode />
+    <keymove />
   </div>
 </template>
 
 <script>
 import { defineComponent } from 'vue';
-import Mapmode from './components/Mapmode.vue';
+import keymove from './components/keymove.vue';
+// import Buildings from './components/Buildings.vue';
 
 export default defineComponent({
   name: 'App',
-  components: { Mapmode },
+  components: { keymove },
 });
 </script>
 
