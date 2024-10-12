@@ -111,6 +111,7 @@ onMounted(async () => {
 
     viewer.camera.flyTo({
       destination: destination,
+      duration: 1.5,
       orientation: {
         heading: Cesium.Math.toRadians(0), // 水平角度
         pitch: Cesium.Math.toRadians(-40),  // 垂直角度
@@ -122,6 +123,29 @@ onMounted(async () => {
 
   // 相机会自动保持追踪该实体，并始终将其放在屏幕中心
   // viewer.trackedEntity = droneEntity;
+
+
+  function animateCameraToPosition(viewer, destination, orientation) {
+    viewer.camera.flyTo({
+      destination: destination, // 目标位置
+      orientation: orientation, // 目标朝向
+      duration: 0.5, // 动画持续时间（秒）
+      complete: () => {
+        console.log('Camera animation completed'); // 动画完成后的回调
+      },
+      cancel: () => {
+        console.log('Camera animation canceled'); // 动画被取消后的回调
+      }
+    });
+  }
+  const destination_a = Cesium.Cartesian3.fromDegrees(120.7, 31.31768, 1500); // 目标位置
+  const orientation_a = {
+    heading: Cesium.Math.toRadians(-90), // 水平角度
+    pitch: Cesium.Math.toRadians(-30), // 垂直角度
+    roll: 0.0 // 翻滚角度
+  };
+
+  animateCameraToPosition(viewer, destination_a, orientation_a);
 
 })
 
