@@ -1,6 +1,6 @@
 <template>
     <div id="cesiumContainer"></div>
-    <button id="startAnimationButton" @click="startAnimation">开始动画</button>
+    <button id="startAnimationButton" @click="toggleAnimation">{{ isPaused ? '继续动画' : '暂停动画' }}</button>
 </template>
 
 <script setup>
@@ -16,11 +16,13 @@ const flightPath = ref([
     [120.665106, 31.313974, 82.81, 349.97, -18.73, 0.00, 3],
     [120.682508, 31.310557, 496.76, 320.34, -19.98, 0.00, 3],
     [120.687852, 31.321756, 598.69, 262.76, -25.74, 0.00, 3],
-
 ]);
 
 // Cesium viewer 的引用
 const viewer = ref(null);
+let isPaused = ref(false); // 控制动画暂停和恢复的标志
+let animationFrameId = null;
+let currentIndex = ref(0); // 当前视角索引
 
 // 初始化 Cesium Viewer
 onMounted(async () => {
@@ -45,19 +47,29 @@ onMounted(async () => {
     });
 
     // 设置初始视角
-    let first_view = flightPath.value[0]
+    let first_view = flightPath.value[0];
     viewer.value.scene.camera.setView({
         destination: Cesium.Cartesian3.fromDegrees(first_view[0], first_view[1], first_view[2]),
         orientation: new Cesium.HeadingPitchRoll.fromDegrees(first_view[3], first_view[4], first_view[5])
     });
+
+    // 开始循环动画
+    startAnimationLoop();
 });
 
-// 开始动画函数
-const startAnimation = async () => {
-    for (let i = 0; i < flightPath.value.length; i++) {
-        // 飞到下一个视角点
-        await flyToDestination(flightPath.value[i]);
-    }
+// 开始循环动画
+const startAnimationLoop = () => {
+    // 如果动画已经暂停，不继续播放
+    if (isPaused.value) return;
+
+    // 飞到下一个视角点
+    flyToDestination(flightPath.value[currentIndex.value]).then(() => {
+        // 更新索引，确保循环播放
+        currentIndex.value = (currentIndex.value + 1) % flightPath.value.length;
+
+        // 使用 requestAnimationFrame 递归调用以继续动画
+        animationFrameId = requestAnimationFrame(startAnimationLoop);
+    });
 };
 
 // 飞行到目标视角点
@@ -76,10 +88,24 @@ const flyToDestination = async (view) => {
             },
             duration: view[6], // 设置飞行时间
             maximumHeight: 50, // 控制最大高度
-            // pitchAdjustHeight: 20, // 控制俯仰高度
+            easingFunction: Cesium.EasingFunction.LINEAR_NONE, // 设置缓动函数
+            // easingFunction: Cesium.EasingFunction.SINUSOIDAL_IN_OUT, // 设置缓动函数
             complete: resolve, // 完成时解析 Promise
         });
     });
+};
+
+// 切换动画的暂停和恢复
+const toggleAnimation = () => {
+    if (isPaused.value) {
+        // 如果处于暂停状态，恢复动画
+        isPaused.value = false;
+        startAnimationLoop(); // 恢复动画播放
+    } else {
+        // 暂停动画
+        isPaused.value = true;
+        cancelAnimationFrame(animationFrameId); // 停止动画循环
+    }
 };
 </script>
 
