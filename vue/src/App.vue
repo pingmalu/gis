@@ -1,20 +1,16 @@
 <template>
   <div class="app">
-    <keymove />
+    <router-view />
   </div>
 </template>
 
 <script>
 import { defineComponent } from 'vue';
-import keymove from './components/keymove.vue';
-// import keymove from './components/Buildings.vue';
 
 export default defineComponent({
   name: 'App',
-  components: { keymove },
 });
 </script>
 
 <style scoped>
-.app { width: 100%; height: 100%; }
 </style>
