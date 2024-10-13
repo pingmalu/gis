@@ -23,6 +23,10 @@ onMounted(async () => {
     navigationInstructionsInitiallyVisible: false, // 隐藏默认的导航提示
   });
 
+  // 设置黑色背景
+  viewer.scene.backgroundColor = Cesium.Color.BLACK;
+  viewer.scene.globe.baseColor = Cesium.Color.BLACK;
+
   // 加载3D Tiles建筑物模型
   const tileset = await Cesium.Cesium3DTileset.fromIonAssetId(96188);
   viewer.scene.primitives.add(tileset);
