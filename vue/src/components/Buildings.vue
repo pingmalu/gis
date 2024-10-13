@@ -6,8 +6,8 @@
   <!-- 弹窗，用于显示获取到的相机信息 -->
   <div id="infoWindow" v-if="showInfoWindow">
     <p><strong>当前视角信息:</strong></p>
-    <p><strong>纬度:</strong> {{ cameraInfo.latitude.toFixed(6) }}</p>
     <p><strong>经度:</strong> {{ cameraInfo.longitude.toFixed(6) }}</p>
+    <p><strong>纬度:</strong> {{ cameraInfo.latitude.toFixed(6) }}</p>
     <p><strong>高度:</strong> {{ cameraInfo.height.toFixed(2) }} 米</p>
     <p><strong>航向:</strong> {{ cameraInfo.heading.toFixed(2) }}°</p>
     <p><strong>俯仰:</strong> {{ cameraInfo.pitch.toFixed(2) }}°</p>
@@ -23,8 +23,8 @@ import * as Cesium from 'cesium';
 // 定义状态变量来控制弹窗显示
 const showInfoWindow = ref(false);
 const cameraInfo = ref({
-  latitude: 0,
   longitude: 0,
+  latitude: 0,
   height: 0,
   heading: 0,
   pitch: 0,
@@ -73,8 +73,8 @@ const showCameraInfo = () => {
   const position = camera.positionCartographic;  // 获取相机的地理位置 (Cartographic)
 
   // 更新相机信息
-  cameraInfo.value.latitude = Cesium.Math.toDegrees(position.latitude);  // 纬度
   cameraInfo.value.longitude = Cesium.Math.toDegrees(position.longitude); // 经度
+  cameraInfo.value.latitude = Cesium.Math.toDegrees(position.latitude);  // 纬度
   cameraInfo.value.height = position.height;  // 高度
   cameraInfo.value.heading = Cesium.Math.toDegrees(camera.heading);  // 航向角
   cameraInfo.value.pitch = Cesium.Math.toDegrees(camera.pitch);  // 俯仰角
