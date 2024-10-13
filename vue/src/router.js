@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Keymove from './components/keymove.vue';
 import Buildings from './components/Buildings.vue';
 import Fly from './components/fly.vue';
+import Fly2 from './components/fly2.vue';
 
 const routes = [
   {
@@ -16,6 +17,10 @@ const routes = [
   {
     path: '/fly',
     component: Fly, // 指定的路由
+  },
+  {
+    path: '/fly2',
+    component: Fly2, // 指定的路由
   },
 ];
 

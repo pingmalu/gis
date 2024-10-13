@@ -12,6 +12,8 @@
     <p><strong>航向:</strong> {{ cameraInfo.heading.toFixed(2) }}°</p>
     <p><strong>俯仰:</strong> {{ cameraInfo.pitch.toFixed(2) }}°</p>
     <p><strong>横滚:</strong> {{ cameraInfo.roll.toFixed(2) }}°</p>
+    <!-- 复制到剪贴板的按钮 -->
+    <button @click="copyToClipboard_arr" class="btn-primary">复制到剪贴板</button>
     <button @click="showInfoWindow = false">关闭</button>
   </div>
 </template>
@@ -83,6 +85,36 @@ const showCameraInfo = () => {
   // 显示弹窗
   showInfoWindow.value = true;
 };
+
+
+// 复制相机信息到剪贴板
+const copyToClipboard_arr = () => {
+  const infoText = `[${cameraInfo.value.longitude.toFixed(6)},${cameraInfo.value.latitude.toFixed(6)},${cameraInfo.value.height.toFixed(2)},${cameraInfo.value.heading.toFixed(2)},${cameraInfo.value.pitch.toFixed(2)},${cameraInfo.value.roll.toFixed(2)},1],\n`;
+
+  navigator.clipboard.writeText(infoText).then(() => {
+    // alert('视角信息已复制到剪贴板');
+  }).catch(err => {
+    console.error('复制失败: ', err);
+  });
+};
+
+// 复制相机信息到剪贴板
+const copyToClipboard_str = () => {
+  const infoText = `
+    经度: ${cameraInfo.value.longitude.toFixed(6)}
+    纬度: ${cameraInfo.value.latitude.toFixed(6)}
+    高度: ${cameraInfo.value.height.toFixed(2)} 米
+    航向: ${cameraInfo.value.heading.toFixed(2)}°
+    俯仰: ${cameraInfo.value.pitch.toFixed(2)}°
+    横滚: ${cameraInfo.value.roll.toFixed(2)}°
+  `;
+
+  navigator.clipboard.writeText(infoText).then(() => {
+    // alert('视角信息已复制到剪贴板');
+  }).catch(err => {
+    console.error('复制失败: ', err);
+  });
+};
 </script>
 
 <style scoped>
@@ -132,5 +164,10 @@ const showCameraInfo = () => {
 
 #infoWindow button:hover {
   background-color: #d32f2f;
+}
+
+#infoWindow button.btn-primary {
+  background-color: #b6ec00;
+  margin-right: 10px;
 }
 </style>
