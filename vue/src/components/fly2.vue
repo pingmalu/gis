@@ -88,7 +88,7 @@ const flyToDestination = async (view) => {
             },
             duration: view[6], // 设置飞行时间
             maximumHeight: 50, // 控制最大高度
-            easingFunction: Cesium.EasingFunction.LINEAR_NONE, // 设置缓动函数
+            // easingFunction: Cesium.EasingFunction.LINEAR_NONE, // 设置缓动函数
             // easingFunction: Cesium.EasingFunction.SINUSOIDAL_IN_OUT, // 设置缓动函数
             complete: resolve, // 完成时解析 Promise
         });
